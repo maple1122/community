@@ -9,6 +9,7 @@ import org.openqa.selenium.interactions.Actions;
 
 /**
  * 登录
+ *
  * @author wufeng
  * @date 2022/3/25 11:33
  */
@@ -33,7 +34,7 @@ public class LoginPortal {
     }
 
     //登录portal后台
-    public static void login(String username, String password) throws InterruptedException {
+    public static WebDriver login(String username, String password) throws InterruptedException {
         driver.get(domain + "/portal/login");
         //校验是否需要登录
         if (CommonMethod.isJudgingElement(driver, By.className("loginBtn"))) {//是否是登录页
@@ -52,11 +53,12 @@ public class LoginPortal {
             driver.findElement(By.className("loginBtn")).click();//点击登录
             Thread.sleep(3000);
         }
+        return driver;
     }
 
     //默认wf账号登录
     public static WebDriver login() throws InterruptedException {
-        login("wf", "test1234");
+        driver = login("wf", "test1234");
         return driver;
     }
 
