@@ -280,11 +280,11 @@ public class BBSContent extends LoginPortal {
         Thread.sleep(3000);
     }
 
-    //搜索并激活测试版块
+    //是否有测试版块，有则激活
     private static boolean getTestTopic() throws InterruptedException {
         boolean hasTestTopic = false;
-        if (CommonMethod.isJudgingElement(driver, By.xpath("//div[@class='topic-left']/ul/li"))) {//校验是否有数据
-            if (!driver.findElement(By.xpath("//div[@class='float-right']/div[2]/div/span")).getText().contains("autoTest")) {//校验当前是否是autoTest论坛，如果不是
+        if (!driver.findElement(By.xpath("//div[@class='float-right']/div[2]/div/span")).getText().contains("autoTest")) {//校验当前是否是autoTest论坛，如果不是
+            if (CommonMethod.isJudgingElement(driver, By.xpath("//div[@class='topic-left']/ul/li"))) {//校验是否有数据
                 List<WebElement> topic = driver.findElements(By.xpath("//div[@class='topic-left']/ul/li"));//版块列表
                 for (int i = 0; i < topic.size(); i++) {
                     if (topic.get(i).getText().contains("autoTest")) {//版面名称是否包含autoTest
@@ -294,7 +294,11 @@ public class BBSContent extends LoginPortal {
                         break;
                     }
                 }
-            } else hasTestTopic = true;//当前是autoTest论坛
+            }
+        } else {
+            if (!CommonMethod.isJudgingElement(driver, By.xpath("//div[@class='topic-left']/ul/li")))
+                addTopic(); //校验是否有数据
+            hasTestTopic = true;
         }
         Thread.sleep(1000);
         return hasTestTopic;
@@ -309,12 +313,12 @@ public class BBSContent extends LoginPortal {
     //初始化登录
     static {
         try {
-            driver = login("富县管理员", "111111fx");
+            driver = login();
             //校验是否已登录成功
             for (int i = 0; i < 3; i++) {
                 if (!CommonMethod.isJudgingElement(driver, By.className("header-user-pack"))) {
                     if (CommonMethod.isJudgingElement(driver, By.className("loginBtn")))
-                        driver = login("富县管理员", "111111fx");
+                        driver = login();
                     driver.get(domain + "/bbs/static/index.html#/home");
                     Thread.sleep(2000);
                 } else break;

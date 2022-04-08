@@ -52,9 +52,9 @@ public class BBSConfig extends LoginPortal {
     public static void delBBS() throws InterruptedException {
         Boolean hasTestBBS = hasTestBBS();
         if (hasTestBBS) {//不存在autoTest论坛
-            Thread.sleep(200);
-            driver.findElement(By.xpath("//div[@class='top']/div[3]")).click();//点击删除
             Thread.sleep(500);
+            driver.findElement(By.xpath("//div[@class='top']/div[3]")).click();//点击删除
+            Thread.sleep(1000);
             driver.findElement(By.cssSelector("button.el-button.el-button--default.el-button--small.el-button--primary")).click();
             System.out.println("~~~ delBBS()，删除论坛，执行成功 ~~~");
         } else System.out.println("不存在autoTest论坛");
