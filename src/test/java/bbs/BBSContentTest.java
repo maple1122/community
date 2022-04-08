@@ -24,7 +24,7 @@ public class BBSContentTest {
         BBSContent.editTopic();
     }
 
-    @Test(priority = 10)//删除版块
+    @Test(priority = 12)//删除版块
     public void testDelTopic() throws InterruptedException {
         BBSContent.delTopic();
     }
@@ -50,9 +50,29 @@ public class BBSContentTest {
         BBSContent.topArtical();
     }
 
-    @Test(priority = 7)//删除所有测试文章
+    @Test(priority = 11)//删除所有测试文章
     public void testDelAllTestArtical() throws InterruptedException {
         BBSContent.delAllTestArtical();
+    }
+
+    @Test(priority = 7)//回复帖子
+    public void testReply() throws InterruptedException {
+        BBSContent.reply();
+    }
+
+    @Test(priority = 8)//
+    public void testVerifyReply() throws InterruptedException {
+        BBSContent.verifyReply();
+    }
+
+    @Test(priority = 9)//
+    public void testReply2() throws InterruptedException {
+        BBSContent.reply2();
+    }
+
+    @Test(priority = 10)//
+    public void testDelReply() throws InterruptedException {
+        BBSContent.delReply();
     }
 
     @BeforeMethod

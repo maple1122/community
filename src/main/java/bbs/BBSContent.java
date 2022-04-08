@@ -108,16 +108,7 @@ public class BBSContent extends LoginPortal {
         Thread.sleep(500);
         //选择虚拟用户，有autotest用户则选择，没有autotest用户则默认选第一个，无虚拟用户则关闭发表
         if (CommonMethod.isJudgingElement(driver, By.xpath("//ul[@class='el-scrollbar__view el-select-dropdown__list']/li"))) {//校验是否存在虚拟用户
-            boolean testUser = false;
-            List<WebElement> users = driver.findElements(By.xpath("//ul[@class='el-scrollbar__view el-select-dropdown__list']/li"));//虚拟用户列表
-            for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getText().contains("autoTest")) {
-                    testUser = true;
-                    users.get(i).click();
-                    break;
-                }
-            }
-            if (!testUser) users.get(0).click();//没有autoTest用户，则默认选第一个
+            chooseUser();
             Thread.sleep(500);
             driver.findElement(By.xpath("//form[@class='el-form topic-pub-form']/div[2]/div/div/input")).sendKeys("autoTest-标题-" + System.currentTimeMillis());//录入标题
             driver.findElement(By.xpath("//form[@class='el-form topic-pub-form']/div[3]/div/div/textarea")).sendKeys("autoTest-内容信息-" + System.currentTimeMillis());//录入内容
@@ -133,25 +124,23 @@ public class BBSContent extends LoginPortal {
 
     //编辑文章
     public static void editArtical() throws InterruptedException {
-        getTestTopic();
-        if (!CommonMethod.isJudgingElement(driver, By.xpath("//table[@class='el-table__body']/tbody/tr"))) addArtical();
-        List<WebElement> trs = driver.findElements(By.xpath("//table[@class='el-table__body']/tbody/tr"));//文章列表
-        WebElement tr = trs.get(0);//默认取第一条数据
-        if (!isTestBBS()) {//如果不是autoTest论坛，先取标题有auto的文章，无则默认第一条
-            for (int i = 0; i < trs.size(); i++) {
-                if (trs.get(i).getText().contains("auto")) {
-                    tr = trs.get(i);
-                    break;
-                }
-            }
-        }
+        WebElement tr = getTestArtical();
         Actions actions = new Actions(driver);
         boolean articalStatus = tr.findElement(By.xpath("td[2]/div/div/div/div[@class='topic-table-detail']/p[2]/span[3]")).getText().equals("已通过");//数据状态是否已通过
-        if (articalStatus) verifyArtical();
+        if (articalStatus) {
+            actions.moveToElement(tr).perform();
+            Thread.sleep(200);
+            tr.findElement(By.xpath("td[2]/div/div/div/div[@class='topic-table-opt']/span[1]")).click();//点击审核
+            Thread.sleep(500);
+            driver.findElement(By.xpath("//div[@class='el-message-box__btns']/button[1]")).click();
+            Thread.sleep(2000);
+        }
         actions.moveToElement(tr).perform();//光标悬浮第一条数据
         Thread.sleep(500);
         tr.findElement(By.xpath("td[2]/div/div/div/div[@class='topic-table-opt']/span[1]")).click();//点击编辑
         Thread.sleep(500);
+        driver.findElement(By.xpath("//form[@class='el-form topic-pub-form']/div[2]/div/div/input")).clear();//清空标题
+        driver.findElement(By.xpath("//form[@class='el-form topic-pub-form']/div[2]/div/div/input")).sendKeys("autoTest-标题-编辑-" + System.currentTimeMillis());//录入标题
         driver.findElement(By.xpath("//form[@class='el-form topic-pub-form']/div[3]/div/div/textarea")).clear();//清空内容
         driver.findElement(By.xpath("//form[@class='el-form topic-pub-form']/div[3]/div/div/textarea")).sendKeys("autoTest-编辑内容信息-" + System.currentTimeMillis());//录入编辑后的内容
         Thread.sleep(500);
@@ -162,18 +151,7 @@ public class BBSContent extends LoginPortal {
 
     //审核文章
     public static void verifyArtical() throws InterruptedException {
-        getTestTopic();
-        if (!CommonMethod.isJudgingElement(driver, By.xpath("//table[@class='el-table__body']/tbody/tr"))) addArtical();
-        List<WebElement> trs = driver.findElements(By.xpath("//table[@class='el-table__body']/tbody/tr"));//文章列表
-        WebElement tr = trs.get(0);//默认取第一条数据
-        if (!isTestBBS()) {//如果不是autoTest论坛，先取标题有auto的文章，无则默认第一条
-            for (int i = 0; i < trs.size(); i++) {
-                if (trs.get(i).getText().contains("auto")) {
-                    tr = trs.get(i);
-                    break;
-                }
-            }
-        }
+        WebElement tr = getTestArtical();
         Actions actions = new Actions(driver);
         boolean articalStatus = tr.findElement(By.xpath("td[2]/div/div/div/div[@class='topic-table-detail']/p[2]/span[3]")).getText().equals("已通过");//数据状态是否已通过
         actions.moveToElement(tr).perform();//光标悬浮第一条数据
@@ -194,18 +172,7 @@ public class BBSContent extends LoginPortal {
 
     //置顶文章
     public static void topArtical() throws InterruptedException {
-        getTestTopic();
-        if (!CommonMethod.isJudgingElement(driver, By.xpath("//table[@class='el-table__body']/tbody/tr"))) addArtical();
-        List<WebElement> trs = driver.findElements(By.xpath("//table[@class='el-table__body']/tbody/tr"));//文章列表
-        WebElement tr = trs.get(trs.size() - 1);//默认取最后一条数据
-        if (!isTestBBS()) {//如果不是autoTest论坛，先取标题有auto的文章，无则默认最后一条
-            for (int i = 0; i < trs.size(); i++) {
-                if (trs.get(i).getText().contains("auto")) {
-                    tr = trs.get(i);
-                    break;
-                }
-            }
-        }
+        WebElement tr = getTestArtical();
         Actions actions = new Actions(driver);
         boolean articalStatus = tr.findElement(By.xpath("td[2]/div/div/div/div[@class='topic-table-detail']/p[2]/span[3]")).getText().equals("已通过");//数据状态是否已通过
         boolean istop = CommonMethod.isJudgingElement(tr, By.xpath("//table[@class='el-table__body']/tbody/tr[1]/td[2]/div/div/div/p/span"));
@@ -280,6 +247,138 @@ public class BBSContent extends LoginPortal {
         Thread.sleep(3000);
     }
 
+    //回复
+    public static void reply() throws InterruptedException {
+        WebElement tr = getTestArtical();
+        tr.findElement(By.xpath("td[2]/div/div/div/p")).click();
+        driver.findElement(By.cssSelector("button.el-button.topic-detail-reply-btn.el-button--default")).click();
+        boolean reply = detailReply();
+        if (reply) System.out.println("~~~ reply()，回复帖子，执行成功 ~~~");
+        else System.out.println("没有虚拟用户");
+        driver.findElement(By.xpath("//div[@class='topic-detail-header']/span")).click();
+        Thread.sleep(3000);
+    }
+
+    //审核回复
+    public static void verifyReply() throws InterruptedException {
+        WebElement tr = getTestArtical();
+        tr.findElement(By.xpath("td[2]/div/div/div/p")).click();
+        Thread.sleep(1000);
+        if (!CommonMethod.isJudgingElement(driver, By.className("topic-detail-comment"))) {
+            driver.findElement(By.cssSelector("button.el-button.topic-detail-reply-btn.el-button--default")).click();
+            detailReply();
+        }
+        Thread.sleep(1000);
+        List<WebElement> replyList = driver.findElements(By.xpath("//div[@class='topic-detail-comment']/div"));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(replyList.get(0)).perform();
+        Thread.sleep(500);
+        boolean status = replyList.get(0).findElement(By.xpath("div/div[1]/ul/li[1]/span")).getText().equals("已通过");
+        if (status) {
+            replyList.get(0).findElement(By.xpath("div/div[2]/span[2]")).click();
+            Thread.sleep(500);
+            driver.findElement(By.cssSelector("button.el-button.el-button--default.el-button--small")).click();
+            System.out.println("~~~ verifyReply()，回复审核通过，执行成功 ~~~");
+        } else {
+            replyList.get(0).findElement(By.xpath("div/div[2]/span[1]")).click();
+            Thread.sleep(500);
+            driver.findElement(By.cssSelector("button.el-button.el-button--default.el-button--small.el-button--primary")).click();
+            System.out.println("~~~ verifyReply()，回复审核不通过，执行成功 ~~~");
+        }
+        driver.findElement(By.xpath("//div[@class='topic-detail-header']/span")).click();
+        Thread.sleep(3000);
+    }
+
+    //对回复进行回复
+    public static void reply2() throws InterruptedException {
+        WebElement tr = getTestArtical();
+        tr.findElement(By.xpath("td[2]/div/div/div/p")).click();
+        Thread.sleep(1000);
+        if (!CommonMethod.isJudgingElement(driver, By.className("topic-detail-comment"))) detailReply();
+        Thread.sleep(1000);
+        List<WebElement> replyList = driver.findElements(By.xpath("//div[@class='topic-detail-comment']/div"));
+        Actions actions = new Actions(driver);
+        boolean status = replyList.get(0).findElement(By.xpath("div/div[1]/ul/li[1]/span")).getText().equals("已通过");
+        if (!status) {
+            actions.moveToElement(replyList.get(0)).perform();
+            Thread.sleep(200);
+            replyList.get(0).findElement(By.xpath("div/div[2]/span[1]")).click();
+            Thread.sleep(500);
+            driver.findElement(By.cssSelector("button.el-button.el-button--default.el-button--small.el-button--primary")).click();
+            Thread.sleep(1000);
+        }
+        actions.moveToElement(replyList.get(0)).perform();
+        Thread.sleep(200);
+        replyList.get(0).findElement(By.xpath("div/div[2]/span[1]")).click();
+        Thread.sleep(500);
+        boolean reply = detailReply();
+        if (reply) System.out.println("~~~ reply2()，对回复进行回复，执行成功 ~~~");
+        else System.out.println("没有虚拟账号");
+        driver.findElement(By.xpath("//div[@class='topic-detail-header']/span")).click();
+        Thread.sleep(3000);
+    }
+
+    //删除回复
+    public static void delReply() throws InterruptedException {
+        WebElement tr = getTestArtical();
+        tr.findElement(By.xpath("td[2]/div/div/div/p")).click();
+        Thread.sleep(1000);
+        if (CommonMethod.isJudgingElement(driver, By.className("topic-detail-comment"))) {
+            List<WebElement> replyList = driver.findElements(By.xpath("//div[@class='topic-detail-comment']/div"));
+            Actions actions = new Actions(driver);
+            for (int i = replyList.size(); i > 0; i--) {
+                actions.moveToElement(driver.findElement(By.xpath("//div[@class='topic-detail-comment']/div[" + i + "]"))).perform();
+                Thread.sleep(200);
+                driver.findElement(By.xpath("//div[@class='topic-detail-comment']/div[" + i + "]/div/div[2]/span[last()]")).click();
+                Thread.sleep(500);
+                driver.findElement(By.cssSelector("button.el-button.el-button--default.el-button--small.el-button--primary")).click();
+                Thread.sleep(1000);
+            }
+            System.out.println("~~~ delReply()，删除回复，执行成功 ~~~");
+        } else System.out.println("没有回复可删除");
+        driver.findElement(By.xpath("//div[@class='topic-detail-header']/span")).click();
+        Thread.sleep(3000);
+    }
+
+    //详情页进行回复
+    private static boolean detailReply() throws InterruptedException {
+        boolean reply;
+        Thread.sleep(500);
+        driver.findElement(By.xpath("//form[@class='el-form']/div[1]/div/div")).click();
+        Thread.sleep(200);
+        //选择虚拟用户，有autotest用户则选择，没有autotest用户则默认选第一个，无虚拟用户则关闭发表
+        if (CommonMethod.isJudgingElement(driver, By.xpath("//ul[@class='el-scrollbar__view el-select-dropdown__list']/li"))) {//校验是否存在虚拟用户
+            chooseUser();
+            driver.findElement(By.xpath("//form[@class='el-form']/div[2]/div/div/textarea")).sendKeys("这是autoTest回复内容" + System.currentTimeMillis());
+            Thread.sleep(500);
+            driver.findElement(By.xpath("//div[@class='el-dialog__footer']/div/button[1]")).click();
+            reply = true;
+            System.out.println("~~~ reply()，回复帖子，执行成功 ~~~");
+        } else {
+            driver.findElement(By.xpath("//div[@class='el-dialog__footer']/div/button[2]")).click();
+            reply = false;
+        }
+        Thread.sleep(1000);
+        return reply;
+    }
+
+    //获取测试帖子
+    private static WebElement getTestArtical() throws InterruptedException {
+        getTestTopic();
+        if (!CommonMethod.isJudgingElement(driver, By.xpath("//table[@class='el-table__body']/tbody/tr"))) addArtical();
+        List<WebElement> trs = driver.findElements(By.xpath("//table[@class='el-table__body']/tbody/tr"));//文章列表
+        WebElement artical = trs.get(0);//默认取第一条数据
+        if (!isTestBBS()) {//如果不是autoTest论坛，先取标题有auto的文章，无则默认第一条
+            for (int i = 0; i < trs.size(); i++) {
+                if (trs.get(i).findElement(By.xpath("td[2]/div/div/div/p")).getText().contains("auto")) {
+                    artical = trs.get(i);
+                    break;
+                }
+            }
+        }
+        return artical;
+    }
+
     //是否有测试版块，有则激活
     private static boolean getTestTopic() throws InterruptedException {
         boolean hasTestTopic = false;
@@ -308,6 +407,24 @@ public class BBSContent extends LoginPortal {
     private static boolean isTestBBS() {
         boolean isTestBBS = driver.findElement(By.xpath("//div[@class='float-right']/div[2]/div/span")).getText().contains("autoTest");
         return isTestBBS;
+    }
+
+    //选择虚拟用户
+    private static void chooseUser() throws InterruptedException {
+        //选择虚拟用户，有autotest用户则选择，没有autotest用户则默认选第一个，无虚拟用户则关闭发表
+        if (CommonMethod.isJudgingElement(driver, By.xpath("//ul[@class='el-scrollbar__view el-select-dropdown__list']/li"))) {//校验是否存在虚拟用户
+            boolean testUser = false;
+            List<WebElement> users = driver.findElements(By.xpath("//ul[@class='el-scrollbar__view el-select-dropdown__list']/li"));//虚拟用户列表
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getText().contains("autoTest")) {
+                    testUser = true;
+                    users.get(i).click();
+                    break;
+                }
+            }
+            if (!testUser) users.get(0).click();//没有autoTest用户，则默认选第一个
+        }
+        Thread.sleep(1000);
     }
 
     //初始化登录
