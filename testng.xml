@@ -1,2 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<suite name="CommunityTest" parallel="false"></suite>
+<suite name="CommunityTest" parallel="false">
+    <test name="社区管理">
+        <classes>
+            <class name="community.CommunityConfigTest"></class>
+        </classes>
+    </test>
+    <test name="论坛管理">
+        <classes>
+            <class name="bbs.BBSConfigTest"></class>
+            <class name="bbs.BBSContentTest"></class>
+        </classes>
+    </test>
+    <listeners>
+        <listener class-name="org.uncommons.reportng.HTMLReporter"/>
+        <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
+    </listeners>
+</suite>

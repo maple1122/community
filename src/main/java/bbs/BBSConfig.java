@@ -23,10 +23,10 @@ public class BBSConfig extends LoginPortal {
         Boolean hasTestBBS = hasTestBBS();
         if (!hasTestBBS) {//不存在autoTest论坛
             driver.findElement(By.xpath("//div[@class='leftTitle']/img[2]")).click();//点击新建
-            Thread.sleep(200);
+            Thread.sleep(500);
             driver.findElement(By.xpath("//form[@class='el-form demo-ruleForm']/div[1]/div/div/input")).sendKeys("autoTest论坛");//录入标题
             driver.findElement(By.xpath("//form[@class='el-form demo-ruleForm']/div[2]/div/div/input")).sendKeys("autotest");//录入编码
-            Thread.sleep(200);
+            Thread.sleep(500);
             driver.findElement(By.xpath("//div[@class='top']/div[1]")).click();//点击保存
             System.out.println("~~~ addBBS()，新建测试论坛，执行成功 ~~~");
         } else System.out.println("已经存在autoTest论坛");
@@ -38,10 +38,10 @@ public class BBSConfig extends LoginPortal {
         Boolean hasTestBBS = hasTestBBS();
         if (hasTestBBS) {//不存在autoTest论坛
             driver.findElement(By.xpath("//div[@class='top']/div[2]")).click();//点击编辑
-            Thread.sleep(200);
+            Thread.sleep(500);
             driver.findElement(By.xpath("//form[@class='el-form demo-ruleForm']/div[2]/div/div/input")).clear();//清空编码编辑框
             driver.findElement(By.xpath("//form[@class='el-form demo-ruleForm']/div[2]/div/div/input")).sendKeys("" + System.currentTimeMillis());//录入编码
-            Thread.sleep(200);
+            Thread.sleep(500);
             driver.findElement(By.xpath("//div[@class='top']/div[1]")).click();//点击保存
             System.out.println("~~~ editBBS()，编辑论坛，执行成功 ~~~");
         } else System.out.println("不存在autoTest论坛");
@@ -52,8 +52,9 @@ public class BBSConfig extends LoginPortal {
     public static void delBBS() throws InterruptedException {
         Boolean hasTestBBS = hasTestBBS();
         if (hasTestBBS) {//不存在autoTest论坛
-            driver.findElement(By.xpath("//div[@class='top']/div[3]")).click();//点击删除
             Thread.sleep(200);
+            driver.findElement(By.xpath("//div[@class='top']/div[3]")).click();//点击删除
+            Thread.sleep(500);
             driver.findElement(By.cssSelector("button.el-button.el-button--default.el-button--small.el-button--primary")).click();
             System.out.println("~~~ delBBS()，删除论坛，执行成功 ~~~");
         } else System.out.println("不存在autoTest论坛");
@@ -80,11 +81,11 @@ public class BBSConfig extends LoginPortal {
     //初始化登录
     static {
         try {
-            driver = login("富县管理员", "111111fx");
+            driver = login();
             for (int i = 0; i < 3; i++) {
                 if (!CommonMethod.isJudgingElement(driver, By.className("header-user-pack"))) {
                     if (CommonMethod.isJudgingElement(driver, By.className("loginBtn")))
-                        driver = login("富县管理员", "111111fx");
+                        driver = login();
                     driver.get(domain + "/bbs/static/index.html#/config");
                     Thread.sleep(2000);
                 } else break;

@@ -155,7 +155,7 @@ public class CommunityConfig extends LoginPortal {
                 System.out.println("~~~ addChannel()，新增版块（论坛），执行成功 ~~~");
             } else {
                 driver.findElement(By.xpath("//div[@class='footer-pack']/button[2]")).click();//没有论坛数据，则点击取消关闭选择论坛
-                Thread.sleep(200);
+                Thread.sleep(500);
                 driver.findElement(By.xpath("//div[@class='channel-box']/div[@class='el-dialog__wrapper']/div/div[@class='el-dialog__footer']/span/button[2]")).click();//点击取消
                 System.out.println("论坛数据源无数据");
             }
@@ -170,7 +170,7 @@ public class CommunityConfig extends LoginPortal {
             driver.findElement(By.xpath("//div[@class='el-tree-node is-focusable']/div/span[2]")).click();//选择测试频道
             Thread.sleep(200);
             driver.findElement(By.xpath("//div[@class='footer-pack']/button[1]")).click();//点击确定
-            Thread.sleep(200);
+            Thread.sleep(500);
             driver.findElement(By.xpath("//div[@class='channel-box']/div[@class='el-dialog__wrapper']/div/div[@class='el-dialog__footer']/span/button[1]")).click();//点击确定，保存版块
             System.out.println("~~~ addChannel()，新增版块（资讯），执行成功 ~~~");
         }
@@ -203,9 +203,9 @@ public class CommunityConfig extends LoginPortal {
                 int num = channels.size();
                 for (int i = 0; i < num; i++) {
                     driver.findElement(By.xpath("//div[@class='channel-box']/div[2]/p[4]")).click();//点击删除
-                    Thread.sleep(200);
+                    Thread.sleep(500);
                     driver.findElement(By.cssSelector("button.el-button.el-button--default.el-button--small.el-button--primary")).click();//确定删除
-                    Thread.sleep(1000);
+                    Thread.sleep(1500);
                 }
                 System.out.println("~~~ deleteChannel()，删除版块，执行成功 ~~");
             } else System.out.println("没有版块可删除");
@@ -218,7 +218,7 @@ public class CommunityConfig extends LoginPortal {
         driver.findElement(By.xpath("//div[@class='operational-box']/div[2]/p[1]")).click();//点击添加
         Thread.sleep(1000);
         driver.findElement(By.xpath("//div[@class='el-table__body-wrapper is-scrolling-none']/table/tbody/tr[1]/td[1]/div/label/span/span")).click();//选择第一个用户
-        Thread.sleep(200);
+        Thread.sleep(500);
         driver.findElement(By.xpath("//div[@class='operational-box']/div[@class='el-dialog__wrapper']/div/div[@class='el-dialog__footer']/span/button[1]")).click();//确定添加
         System.out.println("~~~ addOperational()，添加运营人员，执行成功 ~~~");
         Thread.sleep(3000);
