@@ -7,6 +7,14 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 /**
  * 登录
  *
@@ -15,7 +23,8 @@ import org.openqa.selenium.interactions.Actions;
  */
 public class LoginPortal {
 
-    public static String domain = "http://app.test.pdmiryun.com";
+    public static String domain = env().get(0);//获取域名
+    public static String siteName = env().get(1);//获取站点名
 
     static WebDriver driver = initDriver();
 
@@ -56,10 +65,42 @@ public class LoginPortal {
         return driver;
     }
 
+
     //默认wf账号登录
     public static WebDriver login() throws InterruptedException {
-        driver = login("wf", "test1234");
+        String username = env().get(2);
+        String password = env().get(3);
+        login(username, password);
         return driver;
     }
 
+    //获取环境配置
+    public static List<String> env() {
+
+//        String envString ="envtest";//测试环境
+        String envString = "envyanshi";//演示环境
+
+        Properties pro = new Properties();
+        InputStream prois;
+
+        List<String> envlist = new ArrayList<>();
+        try {
+            prois = new FileInputStream("application.properties");
+            pro.load(new InputStreamReader(prois,"UTF-8"));
+
+            String domain = (String) pro.getProperty(envString + ".domain");
+            String siteName = (String) pro.getProperty(envString + ".siteName");
+            String username = (String) pro.getProperty(envString + ".username");
+            String password = (String) pro.getProperty(envString + ".password");
+
+            envlist.add(domain);
+            envlist.add(siteName);
+            envlist.add(username);
+            envlist.add(password);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return envlist;
+    }
 }

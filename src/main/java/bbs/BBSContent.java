@@ -131,8 +131,9 @@ public class BBSContent extends LoginPortal {
             actions.moveToElement(tr).perform();
             Thread.sleep(200);
             tr.findElement(By.xpath("td[2]/div/div/div/div[@class='topic-table-opt']/span[1]")).click();//点击审核
-            Thread.sleep(500);
-            driver.findElement(By.xpath("//div[@class='el-message-box__btns']/button[1]")).click();
+            Thread.sleep(1000);
+//            driver.findElement(By.xpath("//div[@class='el-message-box__btns']/button[1]")).click();
+            driver.findElement(By.cssSelector("button.el-button.el-button--default.el-button--small")).click();
             Thread.sleep(2000);
         }
         actions.moveToElement(tr).perform();//光标悬浮第一条数据
@@ -440,12 +441,12 @@ public class BBSContent extends LoginPortal {
                     Thread.sleep(2000);
                 } else break;
             }
-            //切换到爱富县
+            //切换到测试站点
             driver.findElement(By.xpath("//div[@class='float-right']/div[1]/div")).click();
             Thread.sleep(200);
             List<WebElement> li = driver.findElements(By.xpath("//ul[@class='listParent']/li"));
             for (int i = 0; i < li.size(); i++) {
-                if (li.get(i).getText().contains("爱富县")) {
+                if (li.get(i).getText().contains(siteName)) {
                     li.get(i).click();
                     break;
                 }

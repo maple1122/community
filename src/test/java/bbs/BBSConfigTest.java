@@ -24,10 +24,10 @@ public class BBSConfigTest {
         BBSConfig.editBBS();
     }
 
-    @Test(priority = 3)//删除测试论坛
-    public void testDelBBS() throws InterruptedException {
-        BBSConfig.delBBS();
-    }
+//    @Test(priority = 3)//删除测试论坛
+//    public void testDelBBS() throws InterruptedException {
+//        BBSConfig.delBBS();
+//    }
 
     @BeforeMethod
     public void testStart(Method method) {
