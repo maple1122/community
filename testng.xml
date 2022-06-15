@@ -5,12 +5,13 @@
             <class name="community.CommunityConfigTest"></class>
         </classes>
     </test>
-    <test name="论坛管理">
-        <classes>
-            <class name="bbs.BBSConfigTest"></class>
-            <class name="bbs.BBSContentTest"></class>
-        </classes>
-    </test>
+
+<!--    <test name="论坛管理">老论坛管理，目前没有-->
+<!--        <classes>-->
+<!--            <class name="bbs.BBSConfigTest"></class>-->
+<!--            <class name="bbs.BBSContentTest"></class>-->
+<!--        </classes>-->
+<!--    </test>-->
     <listeners>
         <listener class-name="org.uncommons.reportng.HTMLReporter"/>
         <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>

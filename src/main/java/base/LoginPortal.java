@@ -77,8 +77,8 @@ public class LoginPortal {
     //获取环境配置
     public static List<String> env() {
 
-//        String envString ="envtest";//测试环境
-        String envString = "envyanshi";//演示环境
+        String envString ="envtest";//测试环境
+//        String envString = "envyanshi";//演示环境
 
         Properties pro = new Properties();
         InputStream prois;
